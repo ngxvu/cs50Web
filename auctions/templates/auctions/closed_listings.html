@@ -1,0 +1,25 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h2 class="mb-4 text-center">Closed Listings</h2>
+        <div class="row">
+            {% for listing in listings %}
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm border-0 rounded-4 p-4">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ listing.title }}</h5>
+                            <p class="card-text">Final Price: ${{ listing.current_bid }}</p>
+                            {% if user.is_authenticated and listing.winner == user %}
+                                <div class="alert alert-success" role="alert">
+                                    Congratulations! You have won this auction.
+                                </div>
+                            {% endif %}
+                            <a href="{% url 'listing_view' listing.id %}" class="btn btn-primary">View Listing</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

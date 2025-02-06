@@ -1,0 +1,68 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                {% if listing.image_url %}
+                    <img src="{{ listing.image_url }}" class="img-fluid mb-3" alt="{{ listing.title }}">
+                {% endif %}
+                <h2>{{ listing.title }}</h2>
+                <p>{{ listing.description }}</p>
+                <p><strong>Current Price: ${{ listing.current_bid }}</strong></p>
+                <p><strong>Category: {{ listing.category.name }}</strong></p>
+                <p><strong>Seller: {{ listing.user.username }}</strong></p>
+                {% if user.is_authenticated %}
+                    <form action="{% url 'listing_view' listing.id %}" method="post" class="mb-3">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="bid">Place a bid:</label>
+                            <input type="number" name="amount" id="bid" class="form-control"
+                                   min="{{ listing.current_bid|add:1 }}" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Bid</button>
+                    </form>
+                    <form action="{% url 'listing_view' listing.id %}" method="post" class="mb-3">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="comment">Add a comment:</label>
+                            <textarea name="content" id="comment" class="form-control" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-secondary">Comment</button>
+                    </form>
+                    <form action="{% url 'listing_view' listing.id %}" method="post" class="mb-3">
+                        {% csrf_token %}
+                        <button type="submit" name="watchlist" class="btn btn-warning">
+                            {% if is_watching %}Remove from Watchlist{% else %}Add to Watchlist{% endif %}
+                        </button>
+                    </form>
+                    {% if is_owner %}
+                        <form action="{% url 'listing_view' listing.id %}" method="post" class="mb-3">
+                            {% csrf_token %}
+                            <button type="submit" name="close" class="btn btn-danger">Close Auction</button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div class="col-md-4">
+                <h3 class="comments-title">Comments</h3>
+                {% if comments %}
+                    <ul>
+                        {% for comment in comments %}
+                            <li class="list-group-item">
+                                <div>
+                                    <strong>{{ comment.user.username }}</strong>: {{ comment.content }}
+                                </div>
+                                <div class="text-muted" style="font-size: 0.8em;">
+                                    <em>{{ comment.timestamp }}</em>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No comments yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Consolas:wght@700&display=swap');
+
+.card-img-top {
+    max-height: 200px;
+    object-fit: cover;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    font-family: 'Consolas', monospace;
+}
