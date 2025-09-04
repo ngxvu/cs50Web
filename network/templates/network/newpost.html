@@ -1,0 +1,15 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <h2 class="form-title">New Post</h2>
+    <form action="{% url 'new_post' %}" method="post" style="max-width: 80%; margin: 0 auto;">
+        {% csrf_token %}
+        <div class="form-group">
+            <textarea class="form-control" name="content" rows="4" placeholder="Write your post here..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    {% if message %}
+        <div class="alert alert-danger mt-3">{{ message }}</div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <h2>{{ profile_user.username }}</h2>
+    <p>Followers: {{ followers_count }}</p>
+    <p>Following: {{ following_count }}</p>
+
+    {% if user.is_authenticated and user != profile_user %}
+        <form action="{% url 'profile' profile_user.username %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+            {% if is_following %}
+                <button type="submit" name="action" value="unfollow" class="btn btn-danger">Unfollow</button>
+            {% else %}
+                <button type="submit" name="action" value="follow" class="btn btn-primary">Follow</button>
+            {% endif %}
+        </form>
+    {% endif %}
+
+    <h3>Posts</h3>
+    <div class="posts">
+        {% for post in posts %}
+            <div class="post" data-id="{{ post.id }}">
+                <p><strong>{{ post.author.username }}</strong> <small>{{ post.timestamp }}</small></p>
+                <p class="post-content">{{ post.content }}</p>
+                <p><small>Likes: {{ post.likes.count }}</small></p>
+                {% if post.author == user %}
+                    <button class="edit-btn" data-id="{{ post.id }}" aria-label="Edit post {{ post.id }}">Edit</button>
+                    <textarea class="edit-textarea" data-id="{{ post.id }}" style="display: none;"></textarea>
+                    <button class="save-btn" data-id="{{ post.id }}" style="display: none;">Save</button>
+                {% endif %}
+                <hr>
+            </div>
+        {% empty %}
+            <p>No posts yet.</p>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+<script src="{% static 'network/user.js' %}"></script>
